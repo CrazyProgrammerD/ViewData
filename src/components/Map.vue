@@ -7,6 +7,7 @@
                 <h3 class="card-title">EC</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlEC"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -24,6 +25,7 @@
                 <h3 class="card-title">NMC</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNMC"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -41,6 +43,7 @@
                 <h3 class="card-title">MESO</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlMESO"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -61,6 +64,7 @@
                 <h3 class="card-title">NCEP</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNCEP"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -78,6 +82,7 @@
                 <h3 class="card-title">RJTD</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlRJTD"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -328,7 +333,7 @@
                       <div class="form-group">
                         <label>Layers</label>
                         <select multiple class="custom-select">
-                          <option>Visibility</option>
+                          <option>Vertical_velocity_geometric_isobaric_1_Hour_Maximum</option>
                           <option>Total precipitation</option>
                           <option>cloud_area_fraction</option>
                           <option>Skin temperature</option>
@@ -563,79 +568,11 @@ export default {
     },
     methods:{
         initMap(){
-           /**  
-             * 智图地图内容  
-             */  
-            var normalm1 = L.tileLayer.chinaProvider('Geoq.Normal.Map', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var normalm2 = L.tileLayer.chinaProvider('Geoq.Normal.Color', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var normalm3 = L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var normalm4 = L.tileLayer.chinaProvider('Geoq.Normal.Gray', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var normalm5 = L.tileLayer.chinaProvider('Geoq.Normal.Warm', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var normalm6 = L.tileLayer.chinaProvider('Geoq.Normal.Cold', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });   
-            /**  
-             * 谷歌  
-             */  
-            var normalMap = L.tileLayer.chinaProvider('Google.Normal.Map', {  
-                    maxZoom: 18,  
-                    minZoom: 1  
-                }),  
-                satelliteMap = L.tileLayer.chinaProvider('Google.Satellite.Map', {  
-                    maxZoom: 18,  
-                    minZoom: 1  
-                });  
-            /**  
-             * 高德地图  
-             */  
-            var Gaode = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var Gaodimgem = L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var Gaodimga = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion', {  
-                maxZoom: 18,  
-                minZoom: 1  
-            });  
-            var Gaodimage = L.layerGroup([Gaodimgem, Gaodimga]);  
-        
-            var baseLayers = {  
-                "智图地图": normalm1,  
-                "智图午夜蓝": normalm3,  
-                "智图灰色": normalm4,  
-                "智图暖色": normalm5,  
-                "谷歌地图": normalMap,  
-                "谷歌影像": satelliteMap,  
-                "高德地图": Gaode,  
-                "高德影像": Gaodimage,
-            }
-
-            var ECMap = L.map("ECMap", {  
-                // center: [116.40769, 39.89945],
-                center: [39.89945, 103.40769],  
-                zoom: 3,  
-                layers: [Gaodimage],  
-                zoomControl: true  
-            });
+            var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                  maxZoom: 18,
+                  id: 'mapbox.streets'
+              }).addTo(ECMap);
             var ECWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/20191125/12/NAFP_ECMF_FTM_VIS_LNO_GLB_20191201060000_00600-01200.NC?service=WMS'
             var ECLay = L.tileLayer.wms(ECWms, {
                     layers: 'p3020',
@@ -647,13 +584,11 @@ export default {
                 });
                 ECLay.addTo(ECMap);
 
-            var NMCMap = L.map("NMCMap", {  
-                // center: [116.40769, 39.89945],
-                center: [39.89945, 103.40769],  
-                zoom: 3,  
-                layers: [normalMap],  
-                zoomControl: true  
-            });
+            var NMCMap = L.map('NMCMap').setView([39.89945,106.40769], 3);
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
+                  maxZoom: 18,
+                  id: 'mapbox.streets'
+              }).addTo(NMCMap);
             var NMCWms = 'http://10.16.48.234:8089/thredds/wms/data/eccodes/NAFP/JMA/GSM/0p25/20191127/18/W_NAFP_C_RJTD_20191127180000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0000_grib2.bin.gz?service=WMS'
             var NMCLay = L.tileLayer.wms(NMCWms, {
                     layers: 'Pressure_reduced_to_MSL_msl',
@@ -665,13 +600,11 @@ export default {
                 });
                 NMCLay.addTo(NMCMap);
 
-            var MESOMap = L.map("MESOMap", {
-                // center: [116.40769, 39.89945],
-                center: [39.89945, 103.40769],  
-                zoom: 3,  
-                layers: [normalm4],  
-                zoomControl: true  
-            });
+            var MESOMap = L.map('MESOMap').setView([39.89945,106.40769], 3);
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
+                  maxZoom: 18,
+                  id: 'mapbox.streets'
+              }).addTo(MESOMap);
             var MESOWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20191126/00/Z_NAFP_C_BABJ_20191126000000_P_CNPC-GRAPES-RMFS-FCSTER-08400.grib2?service=WMS'
             var MESOLay = L.tileLayer.wms(MESOWms, {
                     layers: 'wind @ Specified height level above ground',
@@ -683,13 +616,11 @@ export default {
                 });
                 MESOLay.addTo(MESOMap);
 
-            var NCEPMap = L.map("NCEPMap", {  
-                // center: [116.40769, 39.89945],
-                center: [39.89945, 103.40769],  
-                zoom: 3,  
-                layers: [normalm3],  
-                zoomControl: true  
-            });
+            var NCEPMap = L.map('NCEPMap').setView([39.89945,106.40769], 3);
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
+                  maxZoom: 18,
+                  id: 'mapbox.streets'
+              }).addTo(NCEPMap);
             var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191126/18/W_NAFP_C_KWBC_20191126180000_P_gfs.t18z.pgrb2.0p25.f029.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
                     layers: 'Convective_precipitation_surface_Mixed_intervals_Accumulation',
@@ -701,13 +632,11 @@ export default {
                 });
                 NCEPLay.addTo(NCEPMap);
 
-            var RJTDMap = L.map("RJTDMap", {
-                // center: [116.40769, 39.89945],
-                center: [39.89945, 103.40769],  
-                zoom: 3,  
-                layers: [normalm5],  
-                zoomControl: true  
-            });
+            var RJTDMap = L.map('RJTDMap').setView([39.89945,106.40769], 3);
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
+                  maxZoom: 18,
+                  id: 'mapbox.streets'
+              }).addTo(RJTDMap);
             var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191126/00/W_NAFP_C_RJTD_20191126000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0312_grib2.bin.gz?service=WMS'
             var RJTDLay = L.tileLayer.wms(RJTDWms, {
                     layers: 'High_cloud_cover_surface',
