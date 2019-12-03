@@ -128,9 +128,11 @@
                     <div class="col-sm-3">
                       <!-- date picker -->
                       <label>Date</label>
-                      <div class="block">
+                      <div id="ECdate" class="block">
                         <el-date-picker
-                          v-model="value1"
+                          value-format = "yyyyMMdd"
+                          @change="ECconfigTime"
+                          v-model="ValueEC"
                           type="date"
                           placeholder="选择日期">
                         </el-date-picker>
@@ -163,7 +165,7 @@
                     <div class="col-sm-12">
                       <!-- Select multiple-->
                       <div class="form-group">
-                        <label>Layers</label>
+                        <label>Elements</label>
                         <select multiple class="custom-select">
                           <option>Visibility</option>
                           <option>Total precipitation</option>
@@ -247,7 +249,7 @@
                     <div class="col-sm-12">
                       <!-- Select multiple-->
                       <div class="form-group">
-                        <label>Layers</label>
+                        <label>Elements</label>
                         <select multiple class="custom-select">
                           <option>Visibility</option>
                           <option>Total precipitation</option>
@@ -331,7 +333,7 @@
                     <div class="col-sm-12">
                       <!-- Select multiple-->
                       <div class="form-group">
-                        <label>Layers</label>
+                        <label>Elements</label>
                         <select multiple class="custom-select">
                           <option>Vertical_velocity_geometric_isobaric_1_Hour_Maximum</option>
                           <option>Total precipitation</option>
@@ -415,7 +417,7 @@
                     <div class="col-sm-12">
                       <!-- Select multiple-->
                       <div class="form-group">
-                        <label>Layers</label>
+                        <label>Elements</label>
                         <select multiple class="custom-select">
                           <option>Visibility</option>
                           <option>Total precipitation</option>
@@ -507,7 +509,7 @@
                     <div class="col-sm-12">
                       <!-- Select multiple-->
                       <div class="form-group">
-                        <label>Layers</label>
+                        <label>Elements</label>
                         <select multiple class="custom-select">
                           <option>Visibility</option>
                           <option>Total precipitation</option>
@@ -561,12 +563,17 @@ export default {
         },
         value1: '',
         value2: '',
+        ValueEC:''
       };
     },
     mounted(){
         this.initMap();
+        this.ECconfigTime();
     },
     methods:{
+        ECconfigTime(ValueEC){
+          console.log(ValueEC)
+        },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
