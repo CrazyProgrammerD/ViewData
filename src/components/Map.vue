@@ -189,7 +189,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="getInfo">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -550,7 +550,8 @@
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../assets/js/leaflet.ChineseTmsProviders'
-L.Icon.Default.prototype.options.imagePath = '../assets/img/'
+import axios from 'axios/dist/axios'
+import x2js from 'x2js/dist/x2js.min.js'
 
 export default {
     name: 'Map',
@@ -628,14 +629,14 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NCEPMap);
-            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191126/18/W_NAFP_C_KWBC_20191126180000_P_gfs.t18z.pgrb2.0p25.f029.bin?service=WMS'
+            var NCEPWms = 'http://10.16.48.234:8089/thredds/wms/data/eccodes/NAFP/NCEP/GFS/0p25/20191203/00/W_NAFP_C_KWBC_20191203000000_P_gfs.t00z.pgrb2.0p25.f000.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
-                    layers: 'Convective_precipitation_surface_Mixed_intervals_Accumulation',
-                    styles: 'boxfill/rainbow',
+                    layers: 'Ozone_Mixing_Ratio_isobaric',
+                    styles: 'default-scalar/default',
                     opacity: 0.5,
                     format: 'image/png',
                     transparent: true,
-                    colorscalerange: '0, 50'
+                    colorscalerange: '0.000001766, 0.000003586'
                 });
                 NCEPLay.addTo(NCEPMap);
 
@@ -686,6 +687,17 @@ export default {
             Maps.map(function(t){
               t.on({click:mapclick})
             })
+        },
+        getInfo(){
+          axios.get('http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
+          .then(function(ECData){
+            var x2jsxml = new x2js()
+            var ECObj = x2jsxml.xml2js(ECData.data)
+            console.log(ECObj.catalog.dataset.dataset)
+          })
+          .catch(function(err){
+            console.log(err)
+          })
         }
     }
 }
