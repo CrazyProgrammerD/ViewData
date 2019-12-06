@@ -6,7 +6,7 @@
               <div class="card-header">
                 <h3 class="card-title">EC</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlEC"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlEC" @click="ECpath()"><i class="fa fa-pencil-square-o"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
@@ -42,7 +42,7 @@
               <div class="card-header">
                 <h3 class="card-title">MESO</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlMESO"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlMESO" @click="MESOpath()"><i class="fa fa-pencil-square-o"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
@@ -63,7 +63,7 @@
               <div class="card-header">
                 <h3 class="card-title">NCEP</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNCEP"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNCEP" @click="NCEPpath()"><i class="fa fa-pencil-square-o"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
@@ -81,7 +81,7 @@
               <div class="card-header">
                 <h3 class="card-title">RJTD</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlRJTD"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlRJTD" @click="RJTDpath()"><i class="fa fa-pencil-square-o"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
@@ -131,7 +131,6 @@
                       <div id="ECdate" class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          @change="ECconfigTime"
                           v-model="ValueEC"
                           type="date"
                           placeholder="选择日期">
@@ -143,7 +142,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select">
+                        <select class="custom-select" v-model="DataTimes">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -180,7 +179,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning"  v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -189,7 +188,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="getInfo">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="getInfo()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -216,7 +215,8 @@
                       <label>Date</label>
                       <div class="block">
                         <el-date-picker
-                          v-model="value1"
+                          value-format = "yyyyMMdd"
+                          v-model="ValueEC"
                           type="date"
                           placeholder="选择日期">
                         </el-date-picker>
@@ -227,7 +227,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select">
+                        <select class="custom-select" v-model="DataTimes">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -300,7 +300,8 @@
                       <label>Date</label>
                       <div class="block">
                         <el-date-picker
-                          v-model="value1"
+                          value-format = "yyyyMMdd"
+                          v-model="ValueEC"
                           type="date"
                           placeholder="选择日期">
                         </el-date-picker>
@@ -311,7 +312,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select">
+                        <select class="custom-select" v-model="DataTimes">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -348,7 +349,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -357,7 +358,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="getInfo">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -384,7 +385,8 @@
                       <label>Date</label>
                       <div class="block">
                         <el-date-picker
-                          v-model="value1"
+                          value-format = "yyyyMMdd"
+                          v-model="ValueEC"
                           type="date"
                           placeholder="选择日期">
                         </el-date-picker>
@@ -395,7 +397,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select">
+                        <select class="custom-select" v-model="DataTimes">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -432,7 +434,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -441,7 +443,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary"  @click="getInfo()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -468,7 +470,8 @@
                       <label>Date</label>
                       <div class="block">
                         <el-date-picker
-                          v-model="value1"
+                          value-format = "yyyyMMdd"
+                          v-model="ValueEC"
                           type="date"
                           placeholder="选择日期">
                         </el-date-picker>
@@ -479,7 +482,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select">
+                        <select class="custom-select" v-model="DataTimes">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -497,14 +500,7 @@
                       </div>
                     </div>                    
                   </div>
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="form-group">
-                        <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" placeholder="waiting ..." disabled>
-                      </div>
-                    </div>
-                  </div>
+
                   <div class="row">
                     <div class="col-sm-12">
                       <!-- Select multiple-->
@@ -524,7 +520,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -533,7 +529,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="getInfo()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -564,16 +560,26 @@ export default {
         },
         value1: '',
         value2: '',
-        ValueEC:''
+        ValueEC:'',
+        DataTimes:'',
+        URLpath:''
       };
     },
     mounted(){
         this.initMap();
-        this.ECconfigTime();
     },
     methods:{
-        ECconfigTime(ValueEC){
-          console.log(ValueEC)
+        ECpath(URLpath){
+          this.URLpath = 'http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/ECMWF/HRES/'
+        },
+        MESOpath(URLpath){
+          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
+        },
+        NCEPpath(URLpath){
+          this.URLpath = 'http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/NCEP/GFS/0p25/'
+        },
+        RJTDpath(URLpath){
+          this.URLpath = 'http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/JMA/GSM/0p25/'
         },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
@@ -689,7 +695,8 @@ export default {
             })
         },
         getInfo(){
-          axios.get('http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
+          // axios.get('http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
+          axios.get(this.URLpath+this.ValueEC+'/'+this.DataTimes+'/'+'catalog.xml')
           .then(function(ECData){
             var x2jsxml = new x2js()
             var ECObj = x2jsxml.xml2js(ECData.data)
