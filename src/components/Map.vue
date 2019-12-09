@@ -142,7 +142,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select" v-model="DataTimes">
+                        <select class="custom-select" v-model="DataTimes" @change="getFileNames()">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -153,9 +153,8 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>File Names</label>
-                        <select class="custom-select">
-                          <option>NAFP_ECMF_FTM_VIS_LNO_GLB_20191201120000_01200-01800.NC</option>
-                          <option>NAFP_ECMF_FTM_VIS_LNO_GLB_20191201060000_00600-01200.NC</option>
+                        <select class="custom-select" v-model="Arrindex" @change="getElements()">
+                          <option v-for="(item,index) in nameArr" :key="index" :value="item">{{item}}</option>
                         </select>
                       </div>
                     </div>                    
@@ -165,12 +164,8 @@
                       <!-- Select multiple-->
                       <div class="form-group">
                         <label>Elements</label>
-                        <select multiple class="custom-select">
-                          <option>Visibility</option>
-                          <option>Total precipitation</option>
-                          <option>cloud_area_fraction</option>
-                          <option>Skin temperature</option>
-                          <option>option 5</option>
+                        <select multiple class="custom-select" v-model="ECconfigindex">
+                          <option v-for="(item,index) in ECconfigEl" :key="index" :value="item">{{item}}</option>
                         </select>
                       </div>
                     </div>
@@ -188,7 +183,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="getInfo()">Save changes</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -358,7 +353,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="getInfo">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="getFileNames()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -443,7 +438,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"  @click="getInfo()">Save changes</button>
+                <button type="button" class="btn btn-primary"  @click="getFileNames()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -529,7 +524,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="getInfo()">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="getFileNames()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -558,28 +553,36 @@ export default {
             return time.getTime() > Date.now();
           }
         },
-        value1: '',
-        value2: '',
-        ValueEC:'',
-        DataTimes:'',
-        URLpath:''
+        ValueEC: '',
+        DataTimes: '',
+        URLpath: '',
+        nameArr:[],
+        Arrindex:'',
+        NCSSpath:'',
+        ECconfigEl:[],
+        ECconfigindex:''
       };
     },
     mounted(){
         this.initMap();
     },
+    created(){
+      this.Arrindex = this.nameArr[0]
+      this.ECconfigindex = this.ECconfigEl
+    },
     methods:{
-        ECpath(URLpath){
-          this.URLpath = 'http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/ECMWF/HRES/'
+        ECpath(URLpath,NCSSpath){
+          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/'
+          this.NCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/ECMWF/HRES/'
         },
         MESOpath(URLpath){
           this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
         },
         NCEPpath(URLpath){
-          this.URLpath = 'http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/NCEP/GFS/0p25/'
+          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
         },
         RJTDpath(URLpath){
-          this.URLpath = 'http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/JMA/GSM/0p25/'
+          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/JMA/GSM/0p25/'
         },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
@@ -603,14 +606,14 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NMCMap);
-            var NMCWms = 'http://10.16.48.234:8089/thredds/wms/data/eccodes/NAFP/JMA/GSM/0p25/20191127/18/W_NAFP_C_RJTD_20191127180000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0000_grib2.bin.gz?service=WMS'
+            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191208/00/W_NAFP_C_RJTD_20191208000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0221_grib2.bin.gz?service=WMS'
             var NMCLay = L.tileLayer.wms(NMCWms, {
                     layers: 'Pressure_reduced_to_MSL_msl',
-                    styles: 'contours/Fdefault',
+                    styles: 'contour/Frainbow',
                     opacity: 1,
                     format: 'image/png',
                     transparent: true,
-                    colorscalerange: '98840, 104900'
+                    colorscalerange: '0, 103377'
                 });
                 NMCLay.addTo(NMCMap);
 
@@ -635,10 +638,10 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NCEPMap);
-            var NCEPWms = 'http://10.16.48.234:8089/thredds/wms/data/eccodes/NAFP/NCEP/GFS/0p25/20191203/00/W_NAFP_C_KWBC_20191203000000_P_gfs.t00z.pgrb2.0p25.f000.bin?service=WMS'
+            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191201/00/W_NAFP_C_KWBC_20191201000000_P_gfs.t00z.pgrb2.0p25.f050.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
                     layers: 'Ozone_Mixing_Ratio_isobaric',
-                    styles: 'default-scalar/default',
+                    styles: 'boxfill/rainbow',
                     opacity: 0.5,
                     format: 'image/png',
                     transparent: true,
@@ -694,13 +697,36 @@ export default {
               t.on({click:mapclick})
             })
         },
-        getInfo(){
-          // axios.get('http://10.16.48.234:8089/thredds/catalog/data/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
-          axios.get(this.URLpath+this.ValueEC+'/'+this.DataTimes+'/'+'catalog.xml')
+        getFileNames(){
+          // axios.get('http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
+          console.log(this.URLpath + this.ValueEC + '/' + this.DataTimes + '/' + 'catalog.xml')
+          var _this = this
+          axios.get(this.URLpath + this.ValueEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           .then(function(ECData){
             var x2jsxml = new x2js()
             var ECObj = x2jsxml.xml2js(ECData.data)
-            console.log(ECObj.catalog.dataset.dataset)
+            var dataset = ECObj.catalog.dataset.dataset
+            for (let i = 0; i < dataset.length; i++) {
+              _this.nameArr.push(dataset[i]._name)
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        //<-------getFileNames   end---------->
+        getElements(){
+          var _this = this
+          axios.get(this.NCSSpath + this.ValueEC + '/' + this.DataTimes + '/' + this.Arrindex + '/' + 'dataset.xml')
+          .then(function(ElementsData){
+            var x2jsxml = new x2js()
+            var ElementsObj = x2jsxml.xml2js(ElementsData.data)
+            var Eledataset = ElementsObj.gridDataset.gridSet.grid
+            for (let i = -1; i < Eledataset.length; i++) {
+              _this.ECconfigEl.push(Eledataset[i]._name)
+              console.log(Eledataset[i]._name)
+            }
+            console.log(_this.ECconfigEl)
           })
           .catch(function(err){
             console.log(err)
