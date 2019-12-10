@@ -131,13 +131,13 @@
                       <div id="ECdate" class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="ValueEC"
+                          v-model="DateEC"
                           type="date"
-                          placeholder="选择日期">
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions">
                         </el-date-picker>
                       </div>
                     </div>
-
                     <div class="col-sm-2">
                       <!-- select -->
                       <div class="form-group">
@@ -153,7 +153,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>File Names</label>
-                        <select class="custom-select" v-model="Arrindex" @change="getElements()">
+                        <select class="custom-select" v-model="Arrindex" @change="getElements();InputURLVal()">
                           <option v-for="(item,index) in nameArr" :key="index" :value="item">{{item}}</option>
                         </select>
                       </div>
@@ -164,8 +164,8 @@
                       <!-- Select multiple-->
                       <div class="form-group">
                         <label>Elements</label>
-                        <select multiple class="custom-select" v-model="ECconfigindex">
-                          <option v-for="(item,index) in ECconfigEl" :key="index" :value="item">{{item}}</option>
+                        <select multiple class="custom-select">
+                          <option>{{ECconfigEl}}</option>
                         </select>
                       </div>
                     </div>
@@ -174,7 +174,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning"  v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning"  v-model="InputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -211,9 +211,10 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="ValueEC"
+                          v-model="DateEC"
                           type="date"
-                          placeholder="选择日期">
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions">
                         </el-date-picker>
                       </div>
                     </div>
@@ -296,9 +297,10 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="ValueEC"
+                          v-model="DateMESO"
                           type="date"
-                          placeholder="选择日期">
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions">
                         </el-date-picker>
                       </div>
                     </div>
@@ -307,7 +309,7 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select" v-model="DataTimes">
+                        <select class="custom-select" v-model="MESODataTimes" @change="getMESONames()">
                           <option>12</option>
                           <option>00</option>
                         </select>
@@ -318,9 +320,8 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>File Names</label>
-                        <select class="custom-select">
-                          <option>Z_NAFP_C_BABJ_20191128000000_P_CNPC-GRAPES-RMFS-FCSTER-08400.grib2</option>
-                          <option>Z_NAFP_C_BABJ_20191128000000_P_CNPC-GRAPES-RMFS-FCSTER-05400.grib2</option>
+                        <select class="custom-select" v-model="MESOArrindex" @change="getMESOElements();MESOInputURLVal()">
+                          <option v-for="(item,index) in MESOnameArr" :key="index" :value="item">{{ item }}</option>
                         </select>
                       </div>
                     </div>                    
@@ -331,11 +332,7 @@
                       <div class="form-group">
                         <label>Elements</label>
                         <select multiple class="custom-select">
-                          <option>Vertical_velocity_geometric_isobaric_1_Hour_Maximum</option>
-                          <option>Total precipitation</option>
-                          <option>cloud_area_fraction</option>
-                          <option>Skin temperature</option>
-                          <option>option 5</option>
+                          <option v-for="(item,index) in MESOconfigEl" :key="index" :value="item">{{ item }}</option>
                         </select>
                       </div>
                     </div>
@@ -344,7 +341,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="InputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -353,7 +350,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="getFileNames()">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="aa()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -381,9 +378,10 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="ValueEC"
+                          v-model="DateEC"
                           type="date"
-                          placeholder="选择日期">
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions">
                         </el-date-picker>
                       </div>
                     </div>
@@ -466,9 +464,10 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="ValueEC"
+                          v-model="DateEC"
                           type="date"
-                          placeholder="选择日期">
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions">
                         </el-date-picker>
                       </div>
                     </div>
@@ -553,14 +552,21 @@ export default {
             return time.getTime() > Date.now();
           }
         },
-        ValueEC: '',
+        DateEC: '',
+        DateMESO:'',
         DataTimes: '',
+        MESODataTimes:'',
         URLpath: '',
         nameArr:[],
+        MESOnameArr:[],
         Arrindex:'',
+        MESOArrindex:'',
+        MESOEleindex:[],
         NCSSpath:'',
-        ECconfigEl:[],
-        ECconfigindex:''
+        MESONCSSpath:'',
+        ECconfigEl:'',
+        MESOconfigEl:[],
+        InputWithURL:'',
       };
     },
     mounted(){
@@ -568,7 +574,7 @@ export default {
     },
     created(){
       this.Arrindex = this.nameArr[0]
-      this.ECconfigindex = this.ECconfigEl
+      this.MESOArrindex = this.MESOnameArr[0]
     },
     methods:{
         ECpath(URLpath,NCSSpath){
@@ -577,12 +583,19 @@ export default {
         },
         MESOpath(URLpath){
           this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
+          this.MESONCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
         },
         NCEPpath(URLpath){
           this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
         },
         RJTDpath(URLpath){
           this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/JMA/GSM/0p25/'
+        },
+        InputURLVal(InputWithURL){
+          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+        },
+        MESOInputURLVal(InputWithURL){
+          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/' + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
@@ -697,11 +710,12 @@ export default {
               t.on({click:mapclick})
             })
         },
+        //ECconfig 配置页面接口
         getFileNames(){
           // axios.get('http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
-          console.log(this.URLpath + this.ValueEC + '/' + this.DataTimes + '/' + 'catalog.xml')
+          // console.log(this.URLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           var _this = this
-          axios.get(this.URLpath + this.ValueEC + '/' + this.DataTimes + '/' + 'catalog.xml')
+          axios.get(this.URLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           .then(function(ECData){
             var x2jsxml = new x2js()
             var ECObj = x2jsxml.xml2js(ECData.data)
@@ -717,20 +731,52 @@ export default {
         //<-------getFileNames   end---------->
         getElements(){
           var _this = this
-          axios.get(this.NCSSpath + this.ValueEC + '/' + this.DataTimes + '/' + this.Arrindex + '/' + 'dataset.xml')
+          axios.get(this.NCSSpath + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '/' + 'dataset.xml')
           .then(function(ElementsData){
             var x2jsxml = new x2js()
             var ElementsObj = x2jsxml.xml2js(ElementsData.data)
-            var Eledataset = ElementsObj.gridDataset.gridSet.grid
-            for (let i = -1; i < Eledataset.length; i++) {
-              _this.ECconfigEl.push(Eledataset[i]._name)
-              console.log(Eledataset[i]._name)
-            }
-            console.log(_this.ECconfigEl)
+            _this.ECconfigEl = ElementsObj.gridDataset.gridSet.grid._desc
           })
           .catch(function(err){
             console.log(err)
           })
+        },
+        //MESOconfig 配置页面接口
+        getMESONames(){
+          var _this = this
+          axios.get(this.URLpath + this.DateMESO + '/' + this.MESODataTimes + '/' + 'catalog.xml')
+          .then(function(MESOData){
+            var x2jsxml = new x2js()
+            var MESOObj = x2jsxml.xml2js(MESOData.data)
+            var dataset = MESOObj.catalog.dataset.dataset
+            for (let i = 0; i < dataset.length; i++) {
+              _this.MESOnameArr.push(dataset[i]._name)
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        getMESOElements(){
+          var _this = this
+          axios.get(this.MESONCSSpath + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '/' + 'dataset.xml')
+          .then(function(MESOElementsData){
+            var x2jsxml = new x2js()
+            var MESOElementsObj = x2jsxml.xml2js(MESOElementsData.data)
+            var dataset = MESOElementsObj.gridDataset.gridSet
+            for (let i = 0; i < dataset.length; i++) {
+              var MESOgrid = dataset[i].grid
+              for (let a = 0; a < MESOgrid.length; a++) {
+                _this.MESOconfigEl.push(MESOgrid[a]._name)
+              }
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        aa(){
+          console.log(this.InputWithURL)
         }
     }
 }
