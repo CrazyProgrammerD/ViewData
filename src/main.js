@@ -17,11 +17,12 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './assets/js/leaflet.ChineseTmsProviders'
 //highcharts
-import VueHighcharts from 'vue-highcharts'
+import Highcharts from 'highcharts'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-Vue.use(VueHighcharts)
+Vue.use(Highcharts)
+
 
 /* eslint-disable no-new */
 new Vue({
