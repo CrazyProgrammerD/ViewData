@@ -6,6 +6,7 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import ElementUI from 'element-ui'
+import { Loading } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //AdminLTE
 import './assets/css/adminlte.min.css'
@@ -15,9 +16,12 @@ import 'font-awesome/css/font-awesome.min.css'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './assets/js/leaflet.ChineseTmsProviders'
+//highcharts
+import VueHighcharts from 'vue-highcharts'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(VueHighcharts)
 
 /* eslint-disable no-new */
 new Vue({
@@ -26,3 +30,18 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+Vue.prototype.openLoading = function (){
+  const loading = this.$loading({ 
+    lock: true, 
+    text: '拼命加载中...', 
+    spinner: 'el-icon-loading',
+    background: 'rgba(255, 255, 255, 0.3)', 
+    body: true,
+    customClass: 'mask' 
+  })
+  setTimeout(function () { 
+    loading.close(); 
+  }, 5000)
+  return loading;
+}

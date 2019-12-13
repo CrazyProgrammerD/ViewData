@@ -104,7 +104,8 @@
                 </div>
               </div>
               <div class="card-body" id="MapDefault">
-                The body of the card
+                <!-- chart -->
+                
               </div>
             </div>
           </div>
@@ -341,7 +342,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="InputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="MESOInputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -350,7 +351,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="aa()">Save changes</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -378,7 +379,7 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="DateEC"
+                          v-model="DateNCEP"
                           type="date"
                           placeholder="选择日期"
                           :picker-options="pickerOptions">
@@ -390,8 +391,10 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select" v-model="DataTimes">
+                        <select class="custom-select" v-model="NCEPDataTimes" @change="getNCEPNames()">
+                          <option>18</option>
                           <option>12</option>
+                          <option>06</option>
                           <option>00</option>
                         </select>
                       </div>
@@ -401,9 +404,8 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>File Names</label>
-                        <select class="custom-select">
-                          <option>Z_NAFP_C_BABJ_20191128000000_P_CNPC-GRAPES-RMFS-FCSTER-08400.grib2</option>
-                          <option>Z_NAFP_C_BABJ_20191128000000_P_CNPC-GRAPES-RMFS-FCSTER-05400.grib2</option>
+                        <select class="custom-select" v-model="NCEPArrindex" @change="getNCEPElements(),NCEPInputURLVal()">
+                          <option v-for="(item,index) in NCEPnameArr" :key="index" :value="item">{{ item }}</option>
                         </select>
                       </div>
                     </div>                    
@@ -414,11 +416,7 @@
                       <div class="form-group">
                         <label>Elements</label>
                         <select multiple class="custom-select">
-                          <option>Visibility</option>
-                          <option>Total precipitation</option>
-                          <option>cloud_area_fraction</option>
-                          <option>Skin temperature</option>
-                          <option>option 5</option>
+                          <option v-for="(item,index) in NCEPconfigEl" :key="index" :value="item">{{ item }}</option>
                         </select>
                       </div>
                     </div>
@@ -427,7 +425,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="NCEPInputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -436,7 +434,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"  @click="getFileNames()">Save changes</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -464,7 +462,7 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="DateEC"
+                          v-model="DateRJTD"
                           type="date"
                           placeholder="选择日期"
                           :picker-options="pickerOptions">
@@ -476,8 +474,10 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select" v-model="DataTimes">
+                        <select class="custom-select" v-model="RJTDDataTimes" @change="getRJTDNames()">
+                          <option>18</option>
                           <option>12</option>
+                          <option>06</option>
                           <option>00</option>
                         </select>
                       </div>
@@ -487,9 +487,8 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>File Names</label>
-                        <select class="custom-select">
-                          <option>Z_NAFP_C_BABJ_20191128000000_P_CNPC-GRAPES-RMFS-FCSTER-08400.grib2</option>
-                          <option>Z_NAFP_C_BABJ_20191128000000_P_CNPC-GRAPES-RMFS-FCSTER-05400.grib2</option>
+                        <select class="custom-select" v-model="RJTDArrindex" @change="getRJTDElements(),RJTDInputURLVal()">
+                          <option v-for="(item,index) in RJTDnameArr" :key="index" :value="item">{{ item }}</option>
                         </select>
                       </div>
                     </div>                    
@@ -501,11 +500,7 @@
                       <div class="form-group">
                         <label>Elements</label>
                         <select multiple class="custom-select">
-                          <option>Visibility</option>
-                          <option>Total precipitation</option>
-                          <option>cloud_area_fraction</option>
-                          <option>Skin temperature</option>
-                          <option>option 5</option>
+                          <option v-for="(item,index) in RJTDconfigEl" :key="index" :value="item">{{ item }}</option>
                         </select>
                       </div>
                     </div>
@@ -514,7 +509,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="URLpath" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" v-model="RJTDInputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -523,7 +518,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="getFileNames()">Save changes</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -552,21 +547,42 @@ export default {
             return time.getTime() > Date.now();
           }
         },
+        //时间控件
         DateEC: '',
         DateMESO:'',
+        DateNCEP:'',
+        DateRJTD:'',
+        //时次控件
         DataTimes: '',
         MESODataTimes:'',
+        NCEPDataTimes:'',
+        RJTDDataTimes:'',
         URLpath: '',
+        //文件名选择控件
         nameArr:[],
         MESOnameArr:[],
+        NCEPnameArr:[],
+        RJTDnameArr:[],
         Arrindex:'',
         MESOArrindex:'',
+        NCEPArrindex:'',
+        RJTDArrindex:'',
         MESOEleindex:[],
+        //各模式 NCSS 路径
         NCSSpath:'',
         MESONCSSpath:'',
+        NCEPNCSSpath:'',
+        RJTDNCSSpath:'',
+        //要素选择控件
         ECconfigEl:'',
         MESOconfigEl:[],
+        NCEPconfigEl:[],
+        RJTDconfigEl:[],
+        //各模式 wms 服务URL
         InputWithURL:'',
+        MESOInputWithURL:'',
+        NCEPInputWithURL:'',
+        RJTDInputWithURL:'',
       };
     },
     mounted(){
@@ -575,6 +591,8 @@ export default {
     created(){
       this.Arrindex = this.nameArr[0]
       this.MESOArrindex = this.MESOnameArr[0]
+      this.NCEPArrindex = this.NCEPArrindex[0]
+      this.RJTDArrindex = this.RJTDArrindex[0]
     },
     methods:{
         ECpath(URLpath,NCSSpath){
@@ -587,16 +605,24 @@ export default {
         },
         NCEPpath(URLpath){
           this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
+          this.NCEPNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
         },
         RJTDpath(URLpath){
           this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/JMA/GSM/0p25/'
+          this.RJTDNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/JMA/GSM/0p25/'
         },
         InputURLVal(InputWithURL){
           this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
-        MESOInputURLVal(InputWithURL){
-          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/' + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+        MESOInputURLVal(MESOInputWithURL){
+          this.MESOInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/' + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
+        NCEPInputURLVal(NCEPInputWithURL){
+          this.NCEPInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/' + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + this.NCEPArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+         },
+        RJTDInputURLVal(RJTDInputWithURL){
+          this.RJTDInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/' + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + this.RJTDArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+         },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -619,14 +645,14 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NMCMap);
-            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191208/00/W_NAFP_C_RJTD_20191208000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0221_grib2.bin.gz?service=WMS'
+            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20191210/00/Z_NAFP_C_BABJ_20191210000000_P_CNPC-GRAPES-RMFS-FCSTER-07800.grib2?service=WMS'
             var NMCLay = L.tileLayer.wms(NMCWms, {
-                    layers: 'Pressure_reduced_to_MSL_msl',
+                    layers: 'wind @ Specified height level above ground',
                     styles: 'contour/Frainbow',
                     opacity: 1,
                     format: 'image/png',
                     transparent: true,
-                    colorscalerange: '0, 103377'
+                    colorscalerange: '0, 55'
                 });
                 NMCLay.addTo(NMCMap);
 
@@ -651,14 +677,14 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NCEPMap);
-            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191201/00/W_NAFP_C_KWBC_20191201000000_P_gfs.t00z.pgrb2.0p25.f050.bin?service=WMS'
+            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191210/00/W_NAFP_C_KWBC_20191210000000_P_gfs.t00z.pgrb2.0p25.f156.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
-                    layers: 'Ozone_Mixing_Ratio_isobaric',
+                    layers: 'Apparent_temperature_height_above_ground',
                     styles: 'boxfill/rainbow',
                     opacity: 0.5,
                     format: 'image/png',
                     transparent: true,
-                    colorscalerange: '0.000001766, 0.000003586'
+                    colorscalerange: '0, 400'
                 });
                 NCEPLay.addTo(NCEPMap);
 
@@ -667,7 +693,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(RJTDMap);
-            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191126/00/W_NAFP_C_RJTD_20191126000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0312_grib2.bin.gz?service=WMS'
+            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191210/18/W_NAFP_C_RJTD_20191210180000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0218_grib2.bin.gz?service=WMS'
             var RJTDLay = L.tileLayer.wms(RJTDWms, {
                     layers: 'High_cloud_cover_surface',
                     styles: 'boxfill/rainbow',
@@ -715,6 +741,8 @@ export default {
           // axios.get('http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
           // console.log(this.URLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           var _this = this
+          _this.nameArr.length = 0
+          const rLoading = this.openLoading();
           axios.get(this.URLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           .then(function(ECData){
             var x2jsxml = new x2js()
@@ -722,6 +750,7 @@ export default {
             var dataset = ECObj.catalog.dataset.dataset
             for (let i = 0; i < dataset.length; i++) {
               _this.nameArr.push(dataset[i]._name)
+              rLoading.close()
             }
           })
           .catch(function(err){
@@ -731,11 +760,13 @@ export default {
         //<-------getFileNames   end---------->
         getElements(){
           var _this = this
+          const rLoading = this.openLoading();
           axios.get(this.NCSSpath + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '/' + 'dataset.xml')
           .then(function(ElementsData){
             var x2jsxml = new x2js()
             var ElementsObj = x2jsxml.xml2js(ElementsData.data)
             _this.ECconfigEl = ElementsObj.gridDataset.gridSet.grid._desc
+            rLoading.close()
           })
           .catch(function(err){
             console.log(err)
@@ -744,6 +775,8 @@ export default {
         //MESOconfig 配置页面接口
         getMESONames(){
           var _this = this
+          _this.MESOnameArr.length = 0
+          const rLoading = this.openLoading();
           axios.get(this.URLpath + this.DateMESO + '/' + this.MESODataTimes + '/' + 'catalog.xml')
           .then(function(MESOData){
             var x2jsxml = new x2js()
@@ -751,6 +784,7 @@ export default {
             var dataset = MESOObj.catalog.dataset.dataset
             for (let i = 0; i < dataset.length; i++) {
               _this.MESOnameArr.push(dataset[i]._name)
+              rLoading.close()
             }
           })
           .catch(function(err){
@@ -759,6 +793,8 @@ export default {
         },
         getMESOElements(){
           var _this = this
+          _this.MESOconfigEl.length = 0
+          const rLoading = this.openLoading();
           axios.get(this.MESONCSSpath + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '/' + 'dataset.xml')
           .then(function(MESOElementsData){
             var x2jsxml = new x2js()
@@ -768,6 +804,7 @@ export default {
               var MESOgrid = dataset[i].grid
               for (let a = 0; a < MESOgrid.length; a++) {
                 _this.MESOconfigEl.push(MESOgrid[a]._name)
+                rLoading.close()
               }
             }
           })
@@ -775,9 +812,95 @@ export default {
             console.log(err)
           })
         },
-        aa(){
-          console.log(this.InputWithURL)
-        }
+        getNCEPNames(){
+          var _this = this
+          _this.NCEPnameArr.length = 0
+          const rLoading = this.openLoading();
+          axios.get(this.URLpath + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + 'catalog.xml')
+          .then(function(NCEPData){
+            var x2jsxml = new x2js()
+            var NCEPObj = x2jsxml.xml2js(NCEPData.data)
+            var dataset = NCEPObj.catalog.dataset.dataset
+            for (let i = 0; i < dataset.length; i++) {
+              _this.NCEPnameArr.push(dataset[i]._name)
+              rLoading.close()
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        getNCEPElements(){
+          var _this = this
+          _this.NCEPconfigEl.length = 0
+          const rLoading = this.openLoading();
+          axios.get(this.NCEPNCSSpath + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + this.NCEPArrindex + '/' + 'dataset.xml')
+          .then(function(NCEPElementsData){
+            var x2jsxml = new x2js()
+            var NCEPElementsObj = x2jsxml.xml2js(NCEPElementsData.data)
+            var dataset = NCEPElementsObj.gridDataset.gridSet
+            //attribute
+            for (let i = 0; i < dataset.length; i++) { 
+              // console.log(dataset[i].grid.length)
+              if (dataset[i].grid.length > 0 ) {
+                // console.log(dataset[i].grid)
+                for (let a = 0; a < dataset[i].grid.length; a++) {
+                  _this.NCEPconfigEl.push(dataset[i].grid[a]._name)
+                }
+              }else{
+                _this.NCEPconfigEl.push(dataset[i].grid._name)
+                rLoading.close();
+              }
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        getRJTDNames(){
+          var _this = this
+          _this.RJTDnameArr.length = 0
+          const rLoading = this.openLoading();
+          axios.get(this.URLpath + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + 'catalog.xml')
+          .then(function(RJTDData){
+            var x2jsxml = new x2js()
+            var RJTDObj = x2jsxml.xml2js(RJTDData.data)
+            var dataset = RJTDObj.catalog.dataset.dataset
+            for (let i = 0; i < dataset.length; i++) {
+              // console.log(dataset[i]._name)
+              _this.RJTDnameArr.push(dataset[i]._name)
+              rLoading.close()
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        getRJTDElements(){
+          var _this = this
+          _this.RJTDconfigEl.length = 0
+          const rLoading = this.openLoading();
+          axios.get(this.RJTDNCSSpath + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + this.RJTDArrindex + '/' + 'dataset.xml')
+          .then(function(RJTDElementsData){
+            var x2jsxml = new x2js()
+            var RJTDElementsObj = x2jsxml.xml2js(RJTDElementsData.data)
+            var dataset = RJTDElementsObj.gridDataset.gridSet
+            for (let i = 0; i < dataset.length; i++) { 
+              if (dataset[i].grid.length > 0 ) {
+                for (let a = 0; a < dataset[i].grid.length; a++) {
+                  _this.RJTDconfigEl.push(dataset[i].grid[a]._name)
+                }
+              }else{
+                _this.RJTDconfigEl.push(dataset[i].grid._name)
+                rLoading.close()
+              }
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+      
     }
 }
 </script>
