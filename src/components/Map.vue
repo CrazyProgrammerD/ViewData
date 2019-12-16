@@ -1,10 +1,23 @@
 <template>
     <div>
         <div class="row">
+          <div class="col-lg-4"> 
+          <button type="button" class="btn btn-block btn-outline-info">Info</button>
+          </div>
+          <div class="col-lg-4"> 
+          <button type="button" class="btn btn-block btn-outline-info">Info</button>
+          </div>
+          <div class="col-lg-4"> 
+          <button type="button" class="btn btn-block btn-outline-info">Info</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:20px">
           <div class="col-lg-4">
             <div class="card card-outline card-info">
               <div class="card-header">
                 <h3 class="card-title">EC</h3>
+                <span>test</span>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlEC" @click="ECpath()"><i class="fa fa-pencil-square-o"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
@@ -106,16 +119,13 @@
               <div class="card-body" id="MapDefault">
                 <!-- chart -->
                 <div id="container"></div>
-              </div> 
+              </div>   
+
             </div>
           </div>
           <!-- /.col -->
         </div> 
          <!-- /.row       -->
-
-        <div class="row">
-          <button type="button" class="btn btn-block btn-outline-info">Info</button>
-        </div>
 
         <!-- Modal-lg -->
         <div class="modal fade" id="modal-xlEC">
@@ -189,7 +199,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="aa()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -619,7 +629,7 @@ export default {
           this.RJTDNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/JMA/GSM/0p25/'
         },
         InputURLVal(InputWithURL){
-          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS'
         },
         MESOInputURLVal(MESOInputWithURL){
           this.MESOInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/' + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
@@ -969,6 +979,9 @@ export default {
             }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
           }]
         });
+      },
+      aa(){
+        console.log(this.InputWithURL)
       }
     }
 }
@@ -980,6 +993,6 @@ export default {
     #MESOMap{height: 300px;}
     #NCEPMap{height: 300px;}
     #RJTDMap{height: 300px;}
-    #MapDefault{height: 300px;}
-    #container{width: 100%;height: 300px;}
+    #MapDefault{height: 300px;padding: 0;}
+    #container{height: 300px;}
 </style>
