@@ -37,7 +37,7 @@
               <div class="card-header">
                 <h3 class="card-title">NMC</h3>
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNMC"><i class="fa fa-pencil-square-o"></i></button>
+                  <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNMC" @click="NMCpath()"><i class="fa fa-pencil-square-o"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
@@ -199,7 +199,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="aa()">Save changes</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -227,7 +227,7 @@
                       <div class="block">
                         <el-date-picker
                           value-format = "yyyyMMdd"
-                          v-model="DateEC"
+                          v-model="DateNMC"
                           type="date"
                           placeholder="选择日期"
                           :picker-options="pickerOptions">
@@ -239,9 +239,11 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>Data times</label>
-                        <select class="custom-select" v-model="DataTimes">
-                          <option>12</option>
-                          <option>00</option>
+                        <select class="custom-select" v-model="NMCDataTimes" @change="getNMCNames()">
+                          <option>20</option>
+                          <option>08</option>
+                          <option>05</option>
+                          <option>02</option>
                         </select>
                       </div>
                     </div>
@@ -250,9 +252,8 @@
                       <!-- select -->
                       <div class="form-group">
                         <label>File Names</label>
-                        <select class="custom-select">
-                          <option>NAFP_ECMF_FTM_VIS_LNO_GLB_20191201120000_01200-01800.NC</option>
-                          <option>NAFP_ECMF_FTM_VIS_LNO_GLB_20191201060000_00600-01200.NC</option>
+                        <select class="custom-select" v-model="NMCArrindex" @change="getNMCElements();NMCInputURLVal()">
+                          <option v-for="(item,index) in NMCnameArr" :key="index" :value="item">{{item}}</option>
                         </select>
                       </div>
                     </div>                    
@@ -263,11 +264,7 @@
                       <div class="form-group">
                         <label>Elements</label>
                         <select multiple class="custom-select">
-                          <option>Visibility</option>
-                          <option>Total precipitation</option>
-                          <option>cloud_area_fraction</option>
-                          <option>Skin temperature</option>
-                          <option>option 5</option>
+                          <option>{{NMCECconfigEl}}</option>
                         </select>
                       </div>
                     </div>
@@ -276,7 +273,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" placeholder="waiting ..." disabled>
+                        <input type="text" class="form-control is-warning" id="inputWarning" v-model="NMCInputWithURL" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -553,6 +550,7 @@ import '../assets/js/leaflet.ChineseTmsProviders'
 import axios from 'axios/dist/axios'
 import x2js from 'x2js/dist/x2js.min.js'
 import Highcharts from 'highcharts'
+import moment from 'moment'
 
 export default {
     name: 'Map',
@@ -565,17 +563,25 @@ export default {
         },
         //时间控件
         DateEC: '',
+        DateNMC: '',
         DateMESO:'',
         DateNCEP:'',
         DateRJTD:'',
         //时次控件
         DataTimes: '',
+        NMCDataTimes: '',
         MESODataTimes:'',
         NCEPDataTimes:'',
         RJTDDataTimes:'',
-        URLpath: '',
+        //配置路径
+        ECURLpath: '',
+        NMCURLpath: '',
+        MESOURLpath: '',
+        NCEPURLpath: '',
+        RJTDURLpath: '',
         //文件名选择控件
         nameArr:[],
+        NMCnameArr:[],
         MESOnameArr:[],
         NCEPnameArr:[],
         RJTDnameArr:[],
@@ -586,50 +592,63 @@ export default {
         MESOEleindex:[],
         //各模式 NCSS 路径
         NCSSpath:'',
+        NMCNCSSpath:'',
         MESONCSSpath:'',
         NCEPNCSSpath:'',
         RJTDNCSSpath:'',
         //要素选择控件
         ECconfigEl:'',
+        NMCECconfigEl:'',
         MESOconfigEl:[],
         NCEPconfigEl:[],
         RJTDconfigEl:[],
         //各模式 wms 服务URL
         InputWithURL:'',
+        NMCInputWithURL:'',
         MESOInputWithURL:'',
         NCEPInputWithURL:'',
         RJTDInputWithURL:'',
+        defaultDate:''
       };
     },
     mounted(){
         this.initMap();
         this.Charts();
+        this.defaultSet();
     },
     created(){
       this.Arrindex = this.nameArr[0]
+      this.NMCArrindex = this.NMCnameArr[0]
       this.MESOArrindex = this.MESOnameArr[0]
       this.NCEPArrindex = this.NCEPArrindex[0]
       this.RJTDArrindex = this.RJTDArrindex[0]
     },
     methods:{
-        ECpath(URLpath,NCSSpath){
-          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/'
+        ECpath(ECURLpath){
+          this.ECURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/'
           this.NCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/ECMWF/HRES/'
         },
-        MESOpath(URLpath){
-          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
+        NMCpath(NMCURLpath){
+          this.NMCURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/NMC/'
+          this.NMCNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/CMA/NMC/'
+        },
+        MESOpath(MESOURLpath){
+          this.MESOURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
           this.MESONCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
         },
-        NCEPpath(URLpath){
-          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
+        NCEPpath(NCEPURLpath){
+          this.NCEPURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
           this.NCEPNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
         },
-        RJTDpath(URLpath){
-          this.URLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/JMA/GSM/0p25/'
+        RJTDpath(RJTDURLpath){
+          this.RJTDURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/JMA/GSM/0p25/'
           this.RJTDNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/JMA/GSM/0p25/'
         },
         InputURLVal(InputWithURL){
-          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS'
+          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+        },
+        NMCInputURLVal(){
+          this.NMCInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/' + this.DateNMC + '/' + this.NMCDataTimes + '/' + this.NMCArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
         MESOInputURLVal(MESOInputWithURL){
           this.MESOInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/' + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
@@ -640,36 +659,42 @@ export default {
         RJTDInputURLVal(RJTDInputWithURL){
           this.RJTDInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/' + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + this.RJTDArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
          },
+        defaultSet(){
+          // console.log(new Date())
+          var DateStr = new Date()
+          this.DateEC = moment(DateStr).format('YYYYMMDD')
+          console.log(this.DateEC)
+        },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(ECMap);
-            var ECWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/20191125/12/NAFP_ECMF_FTM_VIS_LNO_GLB_20191201060000_00600-01200.NC?service=WMS'
+            var ECWms = this.InputWithURL
             var ECLay = L.tileLayer.wms(ECWms, {
-                    layers: 'p3020',
-                    styles: 'boxfill/rainbow',
-                    opacity: 0.5,
-                    format: 'image/png',
-                    transparent: true,
-                    colorscalerange: '0, 100000'
-                });
-                ECLay.addTo(ECMap);
+              layers: 'p3020',
+              styles: 'boxfill/rainbow',
+              opacity: 0.5,
+              format: 'image/png',
+              transparent: true,
+              colorscalerange: '0, 100000'
+            });
+            ECLay.addTo(ECMap);
 
             var NMCMap = L.map('NMCMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NMCMap);
-            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20191210/00/Z_NAFP_C_BABJ_20191210000000_P_CNPC-GRAPES-RMFS-FCSTER-07800.grib2?service=WMS'
+            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/20191218/08/Z_NWGD_C_BABJ_20191218085028_P_RFFC_SCMOC-TMP_201912180800_72012.GRB2?service=WMS'
             var NMCLay = L.tileLayer.wms(NMCWms, {
-                    layers: 'wind @ Specified height level above ground',
-                    styles: 'contour/Frainbow',
-                    opacity: 1,
+                    layers: 'Temperature_height_above_ground',
+                    styles: 'boxfill/rainbow',
+                    opacity: 0.5,
                     format: 'image/png',
                     transparent: true,
-                    colorscalerange: '0, 55'
+                    colorscalerange: '233, 350'
                 });
                 NMCLay.addTo(NMCMap);
 
@@ -694,7 +719,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NCEPMap);
-            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191210/00/W_NAFP_C_KWBC_20191210000000_P_gfs.t00z.pgrb2.0p25.f156.bin?service=WMS'
+            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191217/00/W_NAFP_C_KWBC_20191217000000_P_gfs.t00z.pgrb2.0p25.f083.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
                     layers: 'Apparent_temperature_height_above_ground',
                     styles: 'boxfill/rainbow',
@@ -710,7 +735,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(RJTDMap);
-            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191210/18/W_NAFP_C_RJTD_20191210180000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0218_grib2.bin.gz?service=WMS'
+            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191217/00/W_NAFP_C_RJTD_20191217000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0309_grib2.bin.gz?service=WMS'
             var RJTDLay = L.tileLayer.wms(RJTDWms, {
                     layers: 'High_cloud_cover_surface',
                     styles: 'boxfill/rainbow',
@@ -755,12 +780,10 @@ export default {
         },
         //ECconfig 配置页面接口
         getFileNames(){
-          // axios.get('http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/20190514/12/catalog.xml')
-          // console.log(this.URLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           var _this = this
           _this.nameArr.length = 0
           const rLoading = this.openLoading();
-          axios.get(this.URLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
+          axios.get(this.NMCURLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           .then(function(ECData){
             var x2jsxml = new x2js()
             var ECObj = x2jsxml.xml2js(ECData.data)
@@ -789,12 +812,45 @@ export default {
             console.log(err)
           })
         },
+
+        getNMCNames(){
+          var _this = this
+          _this.nameArr.length = 0
+          const rLoading = this.openLoading();
+          axios.get(this.NMCURLpath + this.DateNMC + '/' + this.NMCDataTimes + '/' + 'catalog.xml')
+          .then(function(NMCData){
+            var x2jsxml = new x2js()
+            var NMCObj = x2jsxml.xml2js(NMCData.data)
+            var dataset = NMCObj.catalog.dataset.dataset
+            for (let i = 0; i < dataset.length; i++) {
+              _this.NMCnameArr.push(dataset[i]._name)
+              rLoading.close()
+            }
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        getNMCElements(){
+          var _this = this
+          const rLoading = this.openLoading();
+          axios.get(this.NMCNCSSpath + this.DateNMC + '/' + this.NMCDataTimes + '/' + this.NMCArrindex + '/' + 'dataset.xml')
+          .then(function(NMCElementsData){
+            var x2jsxml = new x2js()
+            var NMCElementsObj = x2jsxml.xml2js(NMCElementsData.data)
+            _this.NMCECconfigEl = NMCElementsObj.gridDataset.gridSet.grid._name
+            rLoading.close()
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
         //MESOconfig 配置页面接口
         getMESONames(){
           var _this = this
           _this.MESOnameArr.length = 0
           const rLoading = this.openLoading();
-          axios.get(this.URLpath + this.DateMESO + '/' + this.MESODataTimes + '/' + 'catalog.xml')
+          axios.get(this.MESOURLpath + this.DateMESO + '/' + this.MESODataTimes + '/' + 'catalog.xml')
           .then(function(MESOData){
             var x2jsxml = new x2js()
             var MESOObj = x2jsxml.xml2js(MESOData.data)
@@ -833,7 +889,7 @@ export default {
           var _this = this
           _this.NCEPnameArr.length = 0
           const rLoading = this.openLoading();
-          axios.get(this.URLpath + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + 'catalog.xml')
+          axios.get(this.NCEPURLpath + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + 'catalog.xml')
           .then(function(NCEPData){
             var x2jsxml = new x2js()
             var NCEPObj = x2jsxml.xml2js(NCEPData.data)
@@ -878,7 +934,7 @@ export default {
           var _this = this
           _this.RJTDnameArr.length = 0
           const rLoading = this.openLoading();
-          axios.get(this.URLpath + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + 'catalog.xml')
+          axios.get(this.RJTDURLpath + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + 'catalog.xml')
           .then(function(RJTDData){
             var x2jsxml = new x2js()
             var RJTDObj = x2jsxml.xml2js(RJTDData.data)
@@ -916,6 +972,9 @@ export default {
           .catch(function(err){
             console.log(err)
           })
+        },
+        getDate(){
+          
         },
       Charts(){
         var chart = Highcharts.chart('container', {
@@ -981,7 +1040,7 @@ export default {
         });
       },
       aa(){
-        console.log(this.InputWithURL)
+        console.log(this.NMCECconfigEl)
       }
     }
 }
