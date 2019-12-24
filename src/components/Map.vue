@@ -189,8 +189,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning"  v-model="InputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
+                        <label class="col-form-label" for="inputECWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
+                        <input type="text" class="form-control is-warning"  v-model="InputWithURL" id="inputECWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -199,7 +199,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" @click="del()">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -272,8 +272,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" id="inputWarning" v-model="NMCInputWithURL" placeholder="waiting ..." disabled>
+                        <label class="col-form-label" for="inputNMCWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
+                        <input type="text" class="form-control is-warning" id="inputNMCWarning" v-model="NMCInputWithURL" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -353,8 +353,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="MESOInputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
+                        <label class="col-form-label" for="inputMESOWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
+                        <input type="text" class="form-control is-warning" v-model="MESOInputWithURL" id="inputMESOWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -436,8 +436,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="NCEPInputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
+                        <label class="col-form-label" for="inputNCEPWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
+                        <input type="text" class="form-control is-warning" v-model="NCEPInputWithURL" id="inputNCEPWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -520,8 +520,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label class="col-form-label" for="inputWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
-                        <input type="text" class="form-control is-warning" v-model="RJTDInputWithURL" id="inputWarning" placeholder="waiting ..." disabled>
+                        <label class="col-form-label" for="inputRJTDWarning"><i class="fa fa-i-cursor"></i> Input with URL</label>
+                        <input type="text" class="form-control is-warning" v-model="RJTDInputWithURL" id="inputRJTDWarning" placeholder="waiting ..." disabled>
                       </div>
                     </div>
                   </div>
@@ -551,6 +551,7 @@ import axios from 'axios/dist/axios'
 import x2js from 'x2js/dist/x2js.min.js'
 import Highcharts from 'highcharts'
 import moment from 'moment'
+import localpng from '../assets/img/local.png'
 
 export default {
     name: 'Map',
@@ -608,13 +609,24 @@ export default {
         MESOInputWithURL:'',
         NCEPInputWithURL:'',
         RJTDInputWithURL:'',
-        defaultDate:''
+        //各模式WMSpath
+        ECURLpath:'',
+        NMCURLpath:'',
+        MESOURLpath:'',
+        NCEPURLpath:'',
+        RJTDURLpath:'',
+        SysChinaDate:''
       };
     },
     mounted(){
-        this.initMap();
-        this.Charts();
-        this.defaultSet();
+      this.ECpath()
+      this.NMCpath()
+      this.MESOpath()
+      this.NCEPpath()
+      this.RJTDpath()
+      this.initMap();
+      this.Charts();
+      this.defaultSet();
     },
     created(){
       this.Arrindex = this.nameArr[0]
@@ -627,43 +639,47 @@ export default {
         ECpath(ECURLpath){
           this.ECURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/ECMWF/HRES/'
           this.NCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/ECMWF/HRES/'
+          this.ECWMSpath = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/'
         },
         NMCpath(NMCURLpath){
           this.NMCURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/NMC/'
           this.NMCNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/CMA/NMC/'
+          this.NMCWMSpath = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/'
         },
         MESOpath(MESOURLpath){
           this.MESOURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
           this.MESONCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
+          this.MESOWMSpath = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/'
         },
         NCEPpath(NCEPURLpath){
           this.NCEPURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
           this.NCEPNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
+          this.NCEPWMSpath = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/'
         },
         RJTDpath(RJTDURLpath){
           this.RJTDURLpath = 'http://10.16.48.234:8085/thredds/catalog/testAll/eccodes/NAFP/JMA/GSM/0p25/'
           this.RJTDNCSSpath = 'http://10.16.48.234:8085/thredds/ncss/testAll/eccodes/NAFP/JMA/GSM/0p25/'
+          this.RJTDWMSpath = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/'
         },
         InputURLVal(InputWithURL){
-          this.InputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/' + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+          this.InputWithURL = this.ECWMSpath + this.DateEC + '/' + this.DataTimes + '/' + this.Arrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
         NMCInputURLVal(){
-          this.NMCInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/' + this.DateNMC + '/' + this.NMCDataTimes + '/' + this.NMCArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+          this.NMCInputWithURL = this.NMCWMSpath + this.DateNMC + '/' + this.NMCDataTimes + '/' + this.NMCArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
         MESOInputURLVal(MESOInputWithURL){
-          this.MESOInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/' + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+          this.MESOInputWithURL = this.MESOWMSpath + this.DateMESO + '/' + this.MESODataTimes + '/' + this.MESOArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
         NCEPInputURLVal(NCEPInputWithURL){
-          this.NCEPInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/' + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + this.NCEPArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
-         },
+          this.NCEPInputWithURL = this.NCEPWMSpath + this.DateNCEP + '/' + this.NCEPDataTimes + '/' + this.NCEPArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+        },
         RJTDInputURLVal(RJTDInputWithURL){
-          this.RJTDInputWithURL = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/' + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + this.RJTDArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
-         },
+          this.RJTDInputWithURL = this.RJTDWMSpath + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + this.RJTDArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
+        },
         defaultSet(){
-          // console.log(new Date())
           var DateStr = new Date()
-          this.DateEC = moment(DateStr).format('YYYYMMDD')
-          console.log(this.DateEC)
+          this.SysChinaDate = moment(DateStr).format('YYYYMMDD')
+          console.log(this.SysChinaDate)
         },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
@@ -671,16 +687,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(ECMap);
-            var ECWms = this.InputWithURL
-            var ECLay = L.tileLayer.wms(ECWms, {
-              layers: 'p3020',
-              styles: 'boxfill/rainbow',
-              opacity: 0.5,
-              format: 'image/png',
-              transparent: true,
-              colorscalerange: '0, 100000'
-            });
-            ECLay.addTo(ECMap);
+              this.aa(ECMap);
 
             var NMCMap = L.map('NMCMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
@@ -703,7 +710,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(MESOMap);
-            var MESOWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20191126/00/Z_NAFP_C_BABJ_20191126000000_P_CNPC-GRAPES-RMFS-FCSTER-08400.grib2?service=WMS'
+            var MESOWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20191222/00/Z_NAFP_C_BABJ_20191222000000_P_CNPC-GRAPES-RMFS-FCSTER-07800.grib2?service=WMS'
             var MESOLay = L.tileLayer.wms(MESOWms, {
                     layers: 'wind @ Specified height level above ground',
                     styles: 'barb/occam',
@@ -758,19 +765,25 @@ export default {
             function mapclick(e){
               var _this = this
               // console.log(e.latlng.lat)
-              L.marker([e.latlng.lat,e.latlng.lng]).addTo(ECMap)
+              var clickIcon = L.icon({
+                iconUrl:localpng,
+                iconSize:[15,15],
+                iconAnchor: [20, 20],
+                popupAnchor: [-12, -20]
+              })
+              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(ECMap)
                     .bindPopup('lat:' + e.latlng.lat + 'lng:' + e.latlng.lng)
                     .openPopup()
-              L.marker([e.latlng.lat,e.latlng.lng]).addTo(NMCMap)
+              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(NMCMap)
                     .bindPopup('lat:' + e.latlng.lat + 'lng:' + e.latlng.lng)
                     .openPopup()
-              L.marker([e.latlng.lat,e.latlng.lng]).addTo(MESOMap)
+              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(MESOMap)
                     .bindPopup('lat:' + e.latlng.lat + 'lng:' + e.latlng.lng)
                     .openPopup()
-              L.marker([e.latlng.lat,e.latlng.lng]).addTo(NCEPMap)
+              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(NCEPMap)
                     .bindPopup('lat:' + e.latlng.lat + 'lng:' + e.latlng.lng)
                     .openPopup()
-              L.marker([e.latlng.lat,e.latlng.lng]).addTo(RJTDMap)
+              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(RJTDMap)
                     .bindPopup('lat:' + e.latlng.lat + 'lng:' + e.latlng.lng)
                     .openPopup()
             }
@@ -783,7 +796,7 @@ export default {
           var _this = this
           _this.nameArr.length = 0
           const rLoading = this.openLoading();
-          axios.get(this.NMCURLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
+          axios.get(this.ECURLpath + this.DateEC + '/' + this.DataTimes + '/' + 'catalog.xml')
           .then(function(ECData){
             var x2jsxml = new x2js()
             var ECObj = x2jsxml.xml2js(ECData.data)
@@ -974,7 +987,7 @@ export default {
           })
         },
         getDate(){
-          
+
         },
       Charts(){
         var chart = Highcharts.chart('container', {
@@ -1039,9 +1052,19 @@ export default {
           }]
         });
       },
-      aa(){
-        console.log(this.NMCECconfigEl)
-      }
+      aa(ECMap){
+        // console.log(this.NMCECconfigEl)
+        var ECWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/20191221/00/NAFP_ECMF_FTM_VIS_LNO_GLB_20191226120000_01200-01800.NC?service=WMS'
+        var ECLay = L.tileLayer.wms(ECWms, {
+          layers: 'p3020',
+          styles: 'boxfill/rainbow',
+          opacity: 0.5,
+          format: 'image/png',
+          transparent: true,
+          colorscalerange: '0, 100000'
+        });
+        ECLay.addTo(ECMap);
+      },
     }
 }
 </script>
