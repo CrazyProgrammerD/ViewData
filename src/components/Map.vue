@@ -2,13 +2,17 @@
     <div>
         <div class="row">
           <div class="col-lg-4"> 
-          <button type="button" class="btn btn-block btn-outline-info">Info</button>
+            <div class="callout callout-info" style="margin:0">
+              <p>中国时间：{{ SysChinaDate }}</p>
+            </div>
           </div>
           <div class="col-lg-4"> 
-          <button type="button" class="btn btn-block btn-outline-info">Info</button>
+            <div class="callout callout-info" style="margin:0">
+              <p>世界时间：{{ SysInterDate }} （世界标准时间）</p>
+            </div>
           </div>
           <div class="col-lg-4"> 
-          <button type="button" class="btn btn-block btn-outline-info">Info</button>
+          <button type="button" class="btn btn-block btn-outline-info btn-lg">Defalut</button>
           </div>
         </div>
 
@@ -615,10 +619,15 @@ export default {
         MESOURLpath:'',
         NCEPURLpath:'',
         RJTDURLpath:'',
-        SysChinaDate:''
+        SysChinaDate:'',
+        //系统时间
+        SysDate:'',
+        SysChinaDate:'',
+        SysInterDate:''
       };
     },
     mounted(){
+      this.defaultSet();
       this.ECpath()
       this.NMCpath()
       this.MESOpath()
@@ -626,7 +635,6 @@ export default {
       this.RJTDpath()
       this.initMap();
       this.Charts();
-      this.defaultSet();
     },
     created(){
       this.Arrindex = this.nameArr[0]
@@ -677,9 +685,11 @@ export default {
           this.RJTDInputWithURL = this.RJTDWMSpath + this.DateRJTD + '/' + this.RJTDDataTimes + '/' + this.RJTDArrindex + '?service=WMS&version=1.3.0&request=GetCapabilities'
         },
         defaultSet(){
-          var DateStr = new Date()
-          this.SysChinaDate = moment(DateStr).format('YYYYMMDD')
-          console.log(this.SysChinaDate)
+          //clearInterval()
+          this.SysChinaDate = new Date()
+          this.SysInterDate = moment.utc().format()
+          setInterval(this.defaultSet,1000)
+          this.SysDate = moment(this.SysChinaDate).subtract(1,'days').format('YYYYMMDD')
         },
         initMap(){
             var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
@@ -687,14 +697,14 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(ECMap);
-              this.aa(ECMap);
+              this.ECWMS(ECMap);
 
             var NMCMap = L.map('NMCMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NMCMap);
-            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/20191218/08/Z_NWGD_C_BABJ_20191218085028_P_RFFC_SCMOC-TMP_201912180800_72012.GRB2?service=WMS'
+            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/20191223/08/Z_NWGD_C_BABJ_20191223091336_P_RFFC_SCMOC-TMP_201912230800_72012.GRB2?service=WMS'
             var NMCLay = L.tileLayer.wms(NMCWms, {
                     layers: 'Temperature_height_above_ground',
                     styles: 'boxfill/rainbow',
@@ -726,7 +736,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NCEPMap);
-            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191217/00/W_NAFP_C_KWBC_20191217000000_P_gfs.t00z.pgrb2.0p25.f083.bin?service=WMS'
+            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191223/00/W_NAFP_C_KWBC_20191223000000_P_gfs.t00z.pgrb2.0p25.f114.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
                     layers: 'Apparent_temperature_height_above_ground',
                     styles: 'boxfill/rainbow',
@@ -742,7 +752,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(RJTDMap);
-            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191217/00/W_NAFP_C_RJTD_20191217000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0309_grib2.bin.gz?service=WMS'
+            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191224/00/W_NAFP_C_RJTD_20191224000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0309_grib2.bin.gz?service=WMS'
             var RJTDLay = L.tileLayer.wms(RJTDWms, {
                     layers: 'High_cloud_cover_surface',
                     styles: 'boxfill/rainbow',
@@ -1052,9 +1062,9 @@ export default {
           }]
         });
       },
-      aa(ECMap){
-        // console.log(this.NMCECconfigEl)
-        var ECWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/ECMWF/HRES/20191221/00/NAFP_ECMF_FTM_VIS_LNO_GLB_20191226120000_01200-01800.NC?service=WMS'
+      ECWMS(ECMap){
+        var ECWms = this.ECWMSpath + this.SysDate + '/00/NAFP_ECMF_FTM_VIS_LNO_GLB_' + this.SysDate + '120000_01200-01500.NC?service=WMS'
+        console.log(ECWms)
         var ECLay = L.tileLayer.wms(ECWms, {
           layers: 'p3020',
           styles: 'boxfill/rainbow',
