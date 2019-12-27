@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="col-lg-4"> 
-          <button type="button" class="btn btn-block btn-outline-info btn-lg">Defalut</button>
+          <button type="button" class="btn btn-block btn-outline-info btn-lg" @click="aa(ECInitMap)">Defalut</button>
           </div>
         </div>
 
@@ -203,7 +203,7 @@
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="del()">Save changes</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -623,18 +623,18 @@ export default {
         //系统时间
         SysDate:'',
         SysChinaDate:'',
-        SysInterDate:''
+        SysInterDate:'',
       };
     },
     mounted(){
-      this.defaultSet();
+      this.defaultSet()
       this.ECpath()
       this.NMCpath()
       this.MESOpath()
       this.NCEPpath()
       this.RJTDpath()
-      this.initMap();
-      this.Charts();
+      this.initMap()
+      this.Charts()
     },
     created(){
       this.Arrindex = this.nameArr[0]
@@ -688,16 +688,15 @@ export default {
           //clearInterval()
           this.SysChinaDate = new Date()
           this.SysInterDate = moment.utc().format()
-          setInterval(this.defaultSet,1000)
+          // setInterval(this.defaultSet,1000)
           this.SysDate = moment(this.SysChinaDate).subtract(1,'days').format('YYYYMMDD')
         },
-        initMap(){
-            var ECMap = L.map('ECMap').setView([39.89945,106.40769], 3);
+        initMap(ECInitMap){
+            var ECInitMap = L.map('ECMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
                   maxZoom: 18,
                   id: 'mapbox.streets'
-              }).addTo(ECMap);
-              this.ECWMS(ECMap);
+              }).addTo(ECInitMap);
 
             var NMCMap = L.map('NMCMap').setView([39.89945,106.40769], 3);
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGRvdSIsImEiOiJjamVwY3BoY3EwOGs2MnFsbHo1bzA0eHpnIn0.5SasKtNtzLg_Nbu-CGU8rA', {
@@ -762,7 +761,7 @@ export default {
                     colorscalerange: '0, 100'
                 });
                 RJTDLay.addTo(RJTDMap);
-            var Maps = [ECMap, NMCMap, MESOMap, NCEPMap, RJTDMap]
+            var Maps = [ECInitMap, NMCMap, MESOMap, NCEPMap, RJTDMap]
             function maplink(e){              
                 var _this = this
                 Maps.map(function(t){
@@ -781,7 +780,7 @@ export default {
                 iconAnchor: [20, 20],
                 popupAnchor: [-12, -20]
               })
-              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(ECMap)
+              L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(ECInitMap)
                     .bindPopup('lat:' + e.latlng.lat + 'lng:' + e.latlng.lng)
                     .openPopup()
               L.marker([e.latlng.lat,e.latlng.lng], {icon: clickIcon}).addTo(NMCMap)
@@ -1062,7 +1061,8 @@ export default {
           }]
         });
       },
-      ECWMS(ECMap){
+      ECWMS(ECInitMap){
+        console.log(ECInitMap)
         var ECWms = this.ECWMSpath + this.SysDate + '/00/NAFP_ECMF_FTM_VIS_LNO_GLB_' + this.SysDate + '120000_01200-01500.NC?service=WMS'
         console.log(ECWms)
         var ECLay = L.tileLayer.wms(ECWms, {
@@ -1073,7 +1073,11 @@ export default {
           transparent: true,
           colorscalerange: '0, 100000'
         });
-        ECLay.addTo(ECMap);
+        ECLay.addTo(ECInitMap);
+      },
+      aa(){
+        console.log("EC:"+ this.initMap().ECInitMap)
+        // this.ECWMS(ECInitMap);
       },
     }
 }
