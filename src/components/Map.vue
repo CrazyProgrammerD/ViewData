@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="col-lg-4"> 
-          <button type="button" class="btn btn-block btn-outline-info btn-lg" @click="aa(ECInitMap)">Defalut</button>
+          <button type="button" class="btn btn-block btn-outline-info btn-lg" @click="aa()">Defalut</button>
           </div>
         </div>
 
@@ -21,10 +21,9 @@
             <div class="card card-outline card-info">
               <div class="card-header">
                 <h3 class="card-title">EC</h3>
-                <span>test</span>
+                <span class="ArrindexStyle">&nbsp;&nbsp;&nbsp;&nbsp;{{ Arrindex }}</span>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlEC" @click="ECpath()"><i class="fa fa-pencil-square-o"></i></button>
-                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -40,9 +39,9 @@
             <div class="card card-outline card-info">
               <div class="card-header">
                 <h3 class="card-title">NMC</h3>
+                <span class="ArrindexStyle">&nbsp;&nbsp;&nbsp;&nbsp;{{ NMCArrindex }}</span>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNMC" @click="NMCpath()"><i class="fa fa-pencil-square-o"></i></button>
-                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -58,9 +57,9 @@
             <div class="card card-outline card-info">
               <div class="card-header">
                 <h3 class="card-title">MESO</h3>
+                <span class="ArrindexStyle">&nbsp;&nbsp;&nbsp;&nbsp;{{ MESOArrindex }}</span>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlMESO" @click="MESOpath()"><i class="fa fa-pencil-square-o"></i></button>
-                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -79,9 +78,9 @@
             <div class="card card-outline card-info">
               <div class="card-header">
                 <h3 class="card-title">NCEP</h3>
+                <span class="ArrindexStyle">&nbsp;&nbsp;&nbsp;&nbsp;{{ NCEPArrindex }}</span>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlNCEP" @click="NCEPpath()"><i class="fa fa-pencil-square-o"></i></button>
-                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -97,9 +96,9 @@
             <div class="card card-outline card-info">
               <div class="card-header">
                 <h3 class="card-title">RJTD</h3>
+                <span class="ArrindexStyle">&nbsp;&nbsp;&nbsp;&nbsp;{{ RJTDArrindex }}</span>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-xlRJTD" @click="RJTDpath()"><i class="fa fa-pencil-square-o"></i></button>
-                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fa fa-expand"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
@@ -154,7 +153,8 @@
                           v-model="DateEC"
                           type="date"
                           placeholder="选择日期"
-                          :picker-options="pickerOptions">
+                          :picker-options="pickerOptions"
+                          @change="ClearNameArr()">
                         </el-date-picker>
                       </div>
                     </div>
@@ -234,7 +234,8 @@
                           v-model="DateNMC"
                           type="date"
                           placeholder="选择日期"
-                          :picker-options="pickerOptions">
+                          :picker-options="pickerOptions"
+                          @change="getNMCTimes();ClearNameArr()">
                         </el-date-picker>
                       </div>
                     </div>
@@ -244,10 +245,7 @@
                       <div class="form-group">
                         <label>Data times</label>
                         <select class="custom-select" v-model="NMCDataTimes" @change="getNMCNames()">
-                          <option>20</option>
-                          <option>08</option>
-                          <option>05</option>
-                          <option>02</option>
+                          <option v-for="(item,index) in NMCTimesArr" :key="index" :value="item">{{item}}</option>
                         </select>
                       </div>
                     </div>
@@ -317,7 +315,8 @@
                           v-model="DateMESO"
                           type="date"
                           placeholder="选择日期"
-                          :picker-options="pickerOptions">
+                          :picker-options="pickerOptions"
+                          @change="ClearNameArr()">
                         </el-date-picker>
                       </div>
                     </div>
@@ -398,7 +397,8 @@
                           v-model="DateNCEP"
                           type="date"
                           placeholder="选择日期"
-                          :picker-options="pickerOptions">
+                          :picker-options="pickerOptions"
+                          @change="ClearNameArr()">
                         </el-date-picker>
                       </div>
                     </div>
@@ -481,7 +481,8 @@
                           v-model="DateRJTD"
                           type="date"
                           placeholder="选择日期"
-                          :picker-options="pickerOptions">
+                          :picker-options="pickerOptions"
+                          @change="ClearNameArr()">
                         </el-date-picker>
                       </div>
                     </div>
@@ -591,6 +592,7 @@ export default {
         NCEPnameArr:[],
         RJTDnameArr:[],
         Arrindex:'',
+        NMCArrindex:'',
         MESOArrindex:'',
         NCEPArrindex:'',
         RJTDArrindex:'',
@@ -604,6 +606,7 @@ export default {
         //要素选择控件
         ECconfigEl:'',
         NMCECconfigEl:'',
+        NMCTimesArr:[],
         MESOconfigEl:[],
         NCEPconfigEl:[],
         RJTDconfigEl:[],
@@ -642,6 +645,7 @@ export default {
       this.MESOArrindex = this.MESOnameArr[0]
       this.NCEPArrindex = this.NCEPArrindex[0]
       this.RJTDArrindex = this.RJTDArrindex[0]
+      this.NMCDataTimes = this.NMCTimesArr[0]
     },
     methods:{
         ECpath(ECURLpath){
@@ -703,7 +707,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NMCMap);
-            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/20191223/08/Z_NWGD_C_BABJ_20191223091336_P_RFFC_SCMOC-TMP_201912230800_72012.GRB2?service=WMS'
+            var NMCWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/NMC/20200105/20/Z_NWGD_C_BABJ_20200105210617_P_RFFC_SCMOC-TMP_202001052000_72012.GRB2?service=WMS'
             var NMCLay = L.tileLayer.wms(NMCWms, {
                     layers: 'Temperature_height_above_ground',
                     styles: 'boxfill/rainbow',
@@ -719,7 +723,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(MESOMap);
-            var MESOWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20191222/00/Z_NAFP_C_BABJ_20191222000000_P_CNPC-GRAPES-RMFS-FCSTER-07800.grib2?service=WMS'
+            var MESOWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/CMA/GRAPES_MESO/20200105/00/Z_NAFP_C_BABJ_20200105000000_P_CNPC-GRAPES-RMFS-FCSTER-03300.grib2?service=WMS'
             var MESOLay = L.tileLayer.wms(MESOWms, {
                     layers: 'wind @ Specified height level above ground',
                     styles: 'barb/occam',
@@ -735,7 +739,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(NCEPMap);
-            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20191223/00/W_NAFP_C_KWBC_20191223000000_P_gfs.t00z.pgrb2.0p25.f114.bin?service=WMS'
+            var NCEPWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/NCEP/GFS/0p25/20200105/00/W_NAFP_C_KWBC_20200105000000_P_gfs.t00z.pgrb2.0p25.f096.bin?service=WMS'
             var NCEPLay = L.tileLayer.wms(NCEPWms, {
                     layers: 'Apparent_temperature_height_above_ground',
                     styles: 'boxfill/rainbow',
@@ -751,7 +755,7 @@ export default {
                   maxZoom: 18,
                   id: 'mapbox.streets'
               }).addTo(RJTDMap);
-            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20191224/00/W_NAFP_C_RJTD_20191224000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0309_grib2.bin.gz?service=WMS'
+            var RJTDWms = 'http://10.16.48.234:8085/thredds/wms/testAll/eccodes/NAFP/JMA/GSM/0p25/20200104/00/W_NAFP_C_RJTD_20200104000000_GSM_GPV_Rra2_Gll0p25deg_Lsurf_FD0309_grib2.bin.gz?service=WMS'
             var RJTDLay = L.tileLayer.wms(RJTDWms, {
                     layers: 'High_cloud_cover_surface',
                     styles: 'boxfill/rainbow',
@@ -861,6 +865,24 @@ export default {
             var x2jsxml = new x2js()
             var NMCElementsObj = x2jsxml.xml2js(NMCElementsData.data)
             _this.NMCECconfigEl = NMCElementsObj.gridDataset.gridSet.grid._name
+            rLoading.close()
+          })
+          .catch(function(err){
+            console.log(err)
+          })
+        },
+        getNMCTimes(){
+          var _this = this
+          const rLoading = this.openLoading();
+          axios.get(this.NMCURLpath + this.DateNMC + '/' + 'catalog.xml')
+          .then(function(NMCTimes){
+            var x2jsxml = new x2js()
+            var NMCTimesObj = x2jsxml.xml2js(NMCTimes.data)
+            var NMCTimesdataset = NMCTimesObj.catalog.dataset.catalogRef
+            for (let i = 0; i < NMCTimesdataset.length; i++) {
+              // console.log(NMCTimesdataset[i]['_xlink:title'])
+              _this.NMCTimesArr.push(NMCTimesdataset[i]['_xlink:title'])
+            }
             rLoading.close()
           })
           .catch(function(err){
@@ -1075,8 +1097,18 @@ export default {
         });
         ECLay.addTo(ECInitMap);
       },
+      ClearNameArr(){
+        var _this = this
+        _this.nameArr.length = 0
+        _this.NMCnameArr.length = 0
+        _this.MESOnameArr.length = 0
+        _this.NCEPnameArr.length = 0
+        _this.RJTDnameArr.length = 0
+        _this.NMCTimesArr.length = 0
+      },
       aa(){
-        console.log("EC:"+ this.initMap().ECInitMap)
+        var _this = this
+        console.log("EC:"+ _this.initMap().ECInitMap)
         // this.ECWMS(ECInitMap);
       },
     }
@@ -1091,4 +1123,5 @@ export default {
     #RJTDMap{height: 300px;}
     #MapDefault{height: 300px;padding: 0;}
     #container{height: 300px;}
+    .ArrindexStyle{font-size: 0.15em;}
 </style>
