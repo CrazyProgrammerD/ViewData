@@ -18,7 +18,7 @@
     "boostrap": "^2.0.0",
     "element-ui": "^2.13.0",
     "font-awesome": "^4.7.0",
-    "highcharts": "^8.0.0",
+    "highcharts": "^9.0.0",
     "jquery": "^3.4.1",
     "leaflet": "^1.6.0",
     "moment": "^2.24.0",
